@@ -12,5 +12,6 @@ server.use(helmet());
 server.use(morgan('dev'));
 
 server.use('/posts', postsRouter);
+server.use('/users', usersRouter);
 
 module.exports = server;
