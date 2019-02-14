@@ -14,4 +14,8 @@ server.use(morgan('dev'));
 server.use('/posts', postsRouter);
 server.use('/users', usersRouter);
 
+server.get('/', (req, res) => {
+    res.send(`<h1>Node Blog API</h1>`);
+  });
+
 module.exports = server;
