@@ -5,6 +5,16 @@ const UserData = require('../data/helpers/userDb.js');
 const router = express.Router();
 
 
+
+function upperCase() {
+    return function(req, res, next) {
+    req.body.name = req.body.name.toUpperCase();
+
+    next();
+}
+}
+
+
 // GETS/READS all of the users
 router.get('/', async (req, res) => {
     try {
@@ -49,7 +59,7 @@ router.get('/:id/posts', async (req, res) => {
 
 
 // CREATES a new user
-router.post('/', async (req, res) => {
+router.post('/', upperCase(), async (req, res) => {
     if (req.body.name == "") {
         res.status(400).json({errorMessage: "Please provide a username"});
     }
@@ -64,8 +74,11 @@ router.post('/', async (req, res) => {
 
 
 //UPDATES a user
-router.put('/:id', async (req, res) => {
-    try {
+router.put('/:id', upperCase(), async (req, res) => {
+    if (req.body.name == "") {
+        res.status(400).json({errorMessage: "Please provide a username change"});
+    }
+        try {
         const user = await UserData.update(req.params.id, req.body);
         if (user == 0) {
             res.status(404).json({message: "That user can not be found"});
@@ -76,6 +89,7 @@ router.put('/:id', async (req, res) => {
         console.log(error);
         res.status(500).json({error: "The user could not be updated"});
     }
+
 });
 
 
@@ -93,6 +107,7 @@ router.delete('/:id', async (req, res) => {
         res.status(500).json({message: "An error occurred while deleting the user."});
     }
 });
+
 
 
 module.exports = router;
